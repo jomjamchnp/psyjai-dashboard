@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500&display=swap');
+
+
+body {
+    display: flex;
+    font-family: 'Mitr', sans-serif;
+    min-height: 100vh;
+    display: flex;
+  }
+  
+body, html, .App, #root {
+    width: 100%;
+    height: 100%;
+  }
+
+.bg{
+    /* background-image: url(../../views/pages/cdt/bggg.png); */
+    height: 100vh;
+    display: flex;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: 'absolute';
+}
