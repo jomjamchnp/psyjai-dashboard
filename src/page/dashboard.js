@@ -6,8 +6,8 @@ import angry from '../images/moods/angry.png';
 import sad from '../images/moods/sad.png'; 
 import '../css/dash.css'
 import 'semantic-ui-css/semantic.css';
-import { Segment,Label,Menu,Input,Image,Icon } from 'semantic-ui-react'
-import { Col,Row,Button,Grid,Container } from 'react-bootstrap'
+import { Segment,Label,Menu,Input,Image,Icon,Popup,Rating,Dropdown,Button } from 'semantic-ui-react'
+import { Col,Row,Grid,Container } from 'react-bootstrap'
 import { FaHome,FaTheaterMasks,FaRegLightbulb,FaRegEdit,FaTree,FaQuestion} from "react-icons/fa";
 import { GrArticle } from "react-icons/gr";
 import FullCalendar from '@fullcalendar/react'
@@ -39,8 +39,14 @@ class Dashboard extends React.Component {
   handleItemClick = (e, { name }) => this.setState(
     { activeItem: name },
     history.push('/'+name)
-    
     )
+  handleDateClick = (arg) => { // bind with an arrow function
+      alert(arg.dateStr)
+  }
+
+  handleClick(e) {
+      e.preventDefault();
+  }
 
 //   redirect(to) {
 //     history.push({
@@ -49,14 +55,23 @@ class Dashboard extends React.Component {
 // } 
   render() {
     function renderEventContent(eventInfo) {
-      console.log(eventInfo.event.url) 
+      console.log(eventInfo.event.title) 
+  
+      var text = eventInfo.event.title
       return (
         <div>
-        {/* <p>{eventInfo.event.title}</p> */}
-        <Image disabled size="tiny" src={eventInfo.event.url} />
+          <Popup
+          trigger={
+            <Image  src={text} size="tiny"/>
+            }>
+          <Popup.Header>ประเด็นที่พูดคุย</Popup.Header>
+    <Popup.Content>
+      <Rating icon='star' defaultRating={3} maxRating={4} />
+    </Popup.Content>
+        </Popup>
         </div>
       )
-     
+      
     }
 
     const { activeItem } = this.state
@@ -70,9 +85,10 @@ class Dashboard extends React.Component {
           <Menu.Item>
               <Input icon='search' placeholder='Search ' />
             </Menu.Item>
-            <Menu.Item
+            <Menu.Item 
               name='profile'
               active={activeItem === 'profile'}
+              fitted='horizontally'
             >
                {/* <ImageUploader
                 withIcon={true}
@@ -84,75 +100,100 @@ class Dashboard extends React.Component {
                 withPreview={true}
             />
             <Img src={this.state.pictures} /> */}
-            <Image src={avatar}  size='medium' circular/>
-            <p>Chanpat Sae-tang</p>
+            <Image src={avatar}  size='small' centered circular/>
+            Chanpat Sae-tang
             </Menu.Item>
             <Menu.Item
               name='dashboard'
               active={activeItem === 'dashboard'}
               onClick={this.handleItemClick}
+              fitted='horizontally'
             >
              {/* <Icon name='home' size='mini' /> */}
               {/* <Label>51</Label> */}
-            <FaHome size='15px' /> หน้าแรก
+            <p><FaHome size='15px' /> หน้าแรก</p>
             </Menu.Item>
             <Menu.Item
               name='mood'
               active={activeItem === 'mood'}
               onClick={this.handleItemClick}
+              // fitted='horizontally'
               //href='/mood'
               //link={this.redirect('/mood')}
               //onClick={this.redirect('/mood')}
             >
-              <p><FaTheaterMasks  size='15px'/>  อารมณ์(Moods)</p>
+             <FaTheaterMasks  size='15px'/>  อารมณ์(Moods)
             </Menu.Item>
             <Menu.Item
               name='intervention'
               active={activeItem === 'intervention'}
               onClick={this.handleItemClick}
+              
             >
-              <p><FaRegLightbulb  size='15px'/>สิ่งที่ได้เรียนรู้</p>
+              <p id="pad"><FaRegLightbulb  size='15px'/>สิ่งที่ได้เรียนรู้</p>
             </Menu.Item>
             <Menu.Item
               name='homework'
               active={activeItem === 'homework'}
               onClick={this.handleItemClick}
+              fitted='horizontally'
             >
-              <p><FaRegEdit  size='15px'/>  การบ้าน</p>
+              <p id="pad"><FaRegEdit  size='15px'/>  การบ้าน</p>
             </Menu.Item>
             <Menu.Item
               name='result'
               active={activeItem === 'result'}
               onClick={this.handleItemClick}
+              fitted='horizontally'
             >
-              <p><GrArticle  size='15px'/>  ผลการประเมินอารมณ์</p>
+              <p id="pad"><GrArticle  size='15px'/>  ผลการประเมินอารมณ์</p>
             </Menu.Item>
             <Menu.Item
               name='tree'
               active={activeItem === 'tree'}
               onClick={this.handleItemClick}
+              fitted='horizontally'
             >
-              <p><FaTree  size='15px'/>  ต้นไม้</p>
+              <p id="pad"><FaTree  size='15px'/>  ต้นไม้</p>
             </Menu.Item>
             <Menu.Item
               name='qa'
               active={activeItem === 'qa'}
               onClick={this.handleItemClick}
+              fitted='horizontally'
             >
-              <p><FaQuestion  size='15px'/>  คำถามที่พบบ่อย</p>
-            </Menu.Item>
-       </Menu> 
+              <p id="pad"><FaQuestion  size='15px'/>  คำถามที่พบบ่อย</p>
+              </Menu.Item>
+            {/* </Menu.Item>
+            <Menu.Menu position='buttom'>
+          <Dropdown item text='Language'>
+            <Dropdown.Menu>
+              <Dropdown.Item>English</Dropdown.Item>
+              <Dropdown.Item>Russian</Dropdown.Item>
+              <Dropdown.Item>Spanish</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          </Menu.Menu> */}
+       </Menu>
+       <Button id="logout" color='red' >ออกจากระบบ</Button> 
       </Col>
       <Col xs={6} md={8} ls={8} xl={9}>
       <Segment>
       <FullCalendar
+        
         plugins={[ dayGridPlugin, interactionPlugin ]}
         initialView="dayGridMonth"
+        themeSystem="Flatly"
+        eventBorderColor="white"
+        eventBackgroundColor="white"
         eventContent={renderEventContent}
         events={[
-          { date: '2021-03-13', url:'https://sv1.picz.in.th/images/2021/03/07/D72Bcg.png' },
-          { date: '2021-03-15', url:'https://sv1.picz.in.th/images/2021/03/07/D723T1.png'}
-        ]}
+          { date: '2021-03-13', title:'https://sv1.picz.in.th/images/2021/03/07/D72Bcg.png'},
+          { date: '2021-03-15', title:'https://sv1.picz.in.th/images/2021/03/07/D723T1.png'}
+        ]
+      }
+        dateClick={this.handleDateClick}
+        
       />
 
       </Segment>
