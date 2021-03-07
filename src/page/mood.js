@@ -1,21 +1,17 @@
-import React, { useState } from 'react';
-import '../css/nav.css'
-import {
-    Navbar,
-    NavbarBrand,
-  } from 'reactstrap';
-  import {Img} from 'react-image'
-  import ImageUploader from 'react-images-upload';
-  import avatar from '../images/matthew.png'; 
-  import '../css/dash.css'
-  import 'semantic-ui-css/semantic.css';
-  import { Segment,Label,Menu,Input,Image,Icon } from 'semantic-ui-react'
-  import { Col,Row,Button,Grid,Container } from 'react-bootstrap'
-  import { FaHome,FaTheaterMasks,FaRegLightbulb,FaRegEdit,FaTree,FaQuestion} from "react-icons/fa";
-  import { MdMood } from "react-icons/md";
-  import { GrArticle } from "react-icons/gr";
-
-class Navigation extends React.Component {
+import React from "react";
+import {Img} from 'react-image'
+import ImageUploader from 'react-images-upload';
+import avatar from '../images/matthew.png'; 
+import '../css/dash.css'
+import 'semantic-ui-css/semantic.css';
+import { Segment,Label,Menu,Input,Image,Icon } from 'semantic-ui-react'
+import { Col,Row,Button,Grid,Container } from 'react-bootstrap'
+import { FaHome,FaTheaterMasks,FaRegLightbulb,FaRegEdit,FaTree,FaQuestion} from "react-icons/fa";
+import { MdMood } from "react-icons/md";
+import { GrArticle } from "react-icons/gr";
+// import {browserHistory} from 'react-router';
+import { history } from '../history';
+class Mood extends React.Component {
   constructor(props) {
     super(props);
      this.state = {     
@@ -30,7 +26,11 @@ class Navigation extends React.Component {
           pictures: this.state.pictures,
       });
   }
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+  handleItemClick = (e, { name }) => this.setState(
+    { activeItem: name },
+    history.push('/'+name)
+    
+    )
 //   redirect(to) {
 //     browserHistory.push({
 //        pathname: to
@@ -66,8 +66,8 @@ class Navigation extends React.Component {
             <p>Chanpat Sae-tang</p>
             </Menu.Item>
             <Menu.Item
-              name='home'
-              active={activeItem === 'home'}
+              name='dashboard'
+              active={activeItem === 'dashboard'}
               onClick={this.handleItemClick}
             >
              {/* <Icon name='home' size='mini' /> */}
@@ -78,7 +78,7 @@ class Navigation extends React.Component {
               name='mood'
               active={activeItem === 'mood'}
               // onClick={this.handleItemClick}
-            //  onClick={this.redirect('/mood')}
+             // onClick={this.redirect('/mood')}
             >
               <p><FaTheaterMasks  size='15px'/>  อารมณ์(Moods)</p>
             </Menu.Item>
@@ -120,7 +120,7 @@ class Navigation extends React.Component {
        </Menu> 
       </Col>
       <Col xs={6} md={8} ls={8} xl={8}>
-      <Segment></Segment>
+      <Segment>Mood</Segment>
       </Col>
       </Row>
       </Container>
@@ -131,15 +131,5 @@ class Navigation extends React.Component {
        
     );
   }
-}export default Navigation;
-//   render() {
-//     return (
-
-//        <Navbar expand="md" className="shadow-sm text-center" id="nav">
-//            <NavbarBrand id="text-menu">Dashboard</NavbarBrand>
-//        </Navbar>
-//     );
-//   }
-// }
-
+}export default Mood;
 
