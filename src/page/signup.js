@@ -10,8 +10,9 @@ export default class Signup extends Component {
   constructor() {
     super();
     this.state = { 
-      FirstName: '',
-      LastName: '',
+      displayName:'',
+      // FirstName: '',
+      // LastName: '',
       email: '', 
       password: '',
       isLoading: false
@@ -29,7 +30,7 @@ export default class Signup extends Component {
     registerUser = async () => {
      console.log(this.state)
      console.log('success')
-    if(Object.keys(this.state.email).length === 0 && Object.keys(this.state.password).length === 0) {
+    if(Object.keys(this.state.email).length === 0 && Object.keys(this.state.password).length === 0 && Object.keys(this.state.displayName).length === 0 ) {
       Alert.alert('Enter details to signup!')
       console.log('Enter details to signup!')
     }
@@ -43,14 +44,14 @@ export default class Signup extends Component {
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
         res.user.updateProfile({
-          FirstName: this.state.FirstName,
-          LastName : this.state.LastName
+          displayName: this.state.displayName,
+          // FirstName: this.state.FirstName,
+          // LastName : this.state.LastName
         })
         console.log('User registered successfully!')
         this.setState({
           isLoading: false,
-          FirstName: '',
-          LastName: '',
+          displayName: '',
           email: '', 
           password: '',
         })
@@ -74,8 +75,21 @@ export default class Signup extends Component {
       <form>
                 <h3>Sign Up</h3>
                 <div className="form-group">
-                    <label>First name</label>
+                    <label>Name</label>
                     <input type="text" 
+                      className="form-control" 
+                      placeholder="Name"
+                      //onChangeText={(val) => this.updateInputVal(val, 'FirstName')}
+                      value={this.state.displayName}
+                      onChange={e => {
+                        this.updateInputVal(e.target.value, 'displayName')
+                        this.setState({
+                          displayName : this.state.displayName
+                        })
+                      }}
+                    />
+                    </div>
+                    {/* <input type="text" 
                       className="form-control" 
                       placeholder="First name"
                       //onChangeText={(val) => this.updateInputVal(val, 'FirstName')}
@@ -105,7 +119,7 @@ export default class Signup extends Component {
                         console.log(this.state.LastName)
                       }}
                     />
-                </div>
+                </div> */}
                 <div className="form-group">
                     <label>Email address</label>
                     <input 

@@ -14,6 +14,9 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
 import { history } from '../history';
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import firebase from '../firebasedb/firebaseconfig';
 
 // https://sv1.picz.in.th/images/2021/03/07/D72Bcg.png
 // https://sv1.picz.in.th/images/2021/03/07/D72N0n.png
@@ -21,12 +24,12 @@ import { history } from '../history';
 // https://sv1.picz.in.th/images/2021/03/07/D72hy2.png
 // https://sv1.picz.in.th/images/2021/03/07/D723T1.png
 
+
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
      this.state = {     
-      pictures: []
-      
+      pictures: [],
     };
      this.onDrop = this.onDrop.bind(this);
   }
@@ -48,11 +51,6 @@ class Dashboard extends React.Component {
       e.preventDefault();
   }
 
-//   redirect(to) {
-//     history.push({
-//        pathname: to
-//     });
-// } 
   render() {
     function renderEventContent(eventInfo) {
       console.log(eventInfo.event.title) 
@@ -90,16 +88,6 @@ class Dashboard extends React.Component {
               active={activeItem === 'profile'}
               fitted='horizontally'
             >
-               {/* <ImageUploader
-                withIcon={true}
-                buttonText='Choose images'
-                onChange={this.onDrop}
-                imgExtension={['.jpg', '.gif', '.png']}
-                maxFileSize={5242880}
-                singleImage={true}
-                withPreview={true}
-            />
-            <Img src={this.state.pictures} /> */}
             <Image src={avatar}  size='small' centered circular/>
             Chanpat Sae-tang
             </Menu.Item>
@@ -107,36 +95,29 @@ class Dashboard extends React.Component {
               name='dashboard'
               active={activeItem === 'dashboard'}
               onClick={this.handleItemClick}
-              fitted='horizontally'
+              
             >
-             {/* <Icon name='home' size='mini' /> */}
-              {/* <Label>51</Label> */}
-            <p><FaHome size='15px' /> หน้าแรก</p>
+            <p id="pad"><FaHome size='15px' />  หน้าแรก</p>
             </Menu.Item>
             <Menu.Item
               name='mood'
               active={activeItem === 'mood'}
               onClick={this.handleItemClick}
-              // fitted='horizontally'
-              //href='/mood'
-              //link={this.redirect('/mood')}
-              //onClick={this.redirect('/mood')}
             >
-             <FaTheaterMasks  size='15px'/>  อารมณ์(Moods)
+            <p id="pad"><FaTheaterMasks  size='15px'/>  อารมณ์(Moods)</p>
             </Menu.Item>
             <Menu.Item
               name='intervention'
               active={activeItem === 'intervention'}
-              onClick={this.handleItemClick}
-              
+              onClick={this.handleItemClick}       
             >
-              <p id="pad"><FaRegLightbulb  size='15px'/>สิ่งที่ได้เรียนรู้</p>
+              <p id="pad"><FaRegLightbulb  size='15px'/>  สิ่งที่ได้เรียนรู้</p>
             </Menu.Item>
             <Menu.Item
               name='homework'
               active={activeItem === 'homework'}
               onClick={this.handleItemClick}
-              fitted='horizontally'
+              
             >
               <p id="pad"><FaRegEdit  size='15px'/>  การบ้าน</p>
             </Menu.Item>
@@ -144,7 +125,7 @@ class Dashboard extends React.Component {
               name='result'
               active={activeItem === 'result'}
               onClick={this.handleItemClick}
-              fitted='horizontally'
+              
             >
               <p id="pad"><GrArticle  size='15px'/>  ผลการประเมินอารมณ์</p>
             </Menu.Item>
@@ -152,7 +133,7 @@ class Dashboard extends React.Component {
               name='tree'
               active={activeItem === 'tree'}
               onClick={this.handleItemClick}
-              fitted='horizontally'
+              
             >
               <p id="pad"><FaTree  size='15px'/>  ต้นไม้</p>
             </Menu.Item>
@@ -160,31 +141,22 @@ class Dashboard extends React.Component {
               name='qa'
               active={activeItem === 'qa'}
               onClick={this.handleItemClick}
-              fitted='horizontally'
+              
             >
               <p id="pad"><FaQuestion  size='15px'/>  คำถามที่พบบ่อย</p>
               </Menu.Item>
-            {/* </Menu.Item>
-            <Menu.Menu position='buttom'>
-          <Dropdown item text='Language'>
-            <Dropdown.Menu>
-              <Dropdown.Item>English</Dropdown.Item>
-              <Dropdown.Item>Russian</Dropdown.Item>
-              <Dropdown.Item>Spanish</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-          </Menu.Menu> */}
        </Menu>
        <Button id="logout" color='red' >ออกจากระบบ</Button> 
       </Col>
       <Col xs={6} md={8} ls={8} xl={9}>
       <Segment>
-      <FullCalendar
-        
+      <FullCalendar   
         plugins={[ dayGridPlugin, interactionPlugin ]}
         initialView="dayGridMonth"
         themeSystem="Flatly"
         eventBorderColor="white"
+        //size = "80%"
+        // height = '80%'
         eventBackgroundColor="white"
         eventContent={renderEventContent}
         events={[

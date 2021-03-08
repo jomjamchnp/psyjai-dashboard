@@ -48,76 +48,70 @@ class Mood extends React.Component {
           <Menu.Item>
               <Input icon='search' placeholder='Search ' />
             </Menu.Item>
-            <Menu.Item
+            <Menu.Item 
               name='profile'
               active={activeItem === 'profile'}
+              fitted='horizontally'
             >
-               {/* <ImageUploader
-                withIcon={true}
-                buttonText='Choose images'
-                onChange={this.onDrop}
-                imgExtension={['.jpg', '.gif', '.png']}
-                maxFileSize={5242880}
-                singleImage={true}
-                withPreview={true}
-            />
-            <Img src={this.state.pictures} /> */}
-            <Image src={avatar}  size='medium' circular/>
-            <p>Chanpat Sae-tang</p>
+            <Image src={avatar}  size='small' centered circular/>
+            Chanpat Sae-tang
             </Menu.Item>
             <Menu.Item
               name='dashboard'
               active={activeItem === 'dashboard'}
               onClick={this.handleItemClick}
+              
             >
-             {/* <Icon name='home' size='mini' /> */}
-              {/* <Label>51</Label> */}
-            <FaHome size='15px' /> หน้าแรก
+            <p id="pad"><FaHome size='15px' />  หน้าแรก</p>
             </Menu.Item>
             <Menu.Item
               name='mood'
               active={activeItem === 'mood'}
-              // onClick={this.handleItemClick}
-             // onClick={this.redirect('/mood')}
+              onClick={this.handleItemClick}
             >
-              <p><FaTheaterMasks  size='15px'/>  อารมณ์(Moods)</p>
+            <p id="pad"><FaTheaterMasks  size='15px'/>  อารมณ์(Moods)</p>
             </Menu.Item>
             <Menu.Item
               name='intervention'
               active={activeItem === 'intervention'}
-              onClick={this.handleItemClick}
+              onClick={this.handleItemClick}       
             >
-              <p><FaRegLightbulb  size='15px'/>สิ่งที่ได้เรียนรู้</p>
+              <p id="pad"><FaRegLightbulb  size='15px'/>  สิ่งที่ได้เรียนรู้</p>
             </Menu.Item>
             <Menu.Item
               name='homework'
               active={activeItem === 'homework'}
               onClick={this.handleItemClick}
+              
             >
-              <p><FaRegEdit  size='15px'/>  การบ้าน</p>
+              <p id="pad"><FaRegEdit  size='15px'/>  การบ้าน</p>
             </Menu.Item>
             <Menu.Item
               name='result'
               active={activeItem === 'result'}
               onClick={this.handleItemClick}
+              
             >
-              <p><GrArticle  size='15px'/>  ผลการประเมินอารมณ์</p>
+              <p id="pad"><GrArticle  size='15px'/>  ผลการประเมินอารมณ์</p>
             </Menu.Item>
             <Menu.Item
               name='tree'
               active={activeItem === 'tree'}
               onClick={this.handleItemClick}
+              
             >
-              <p><FaTree  size='15px'/>  ต้นไม้</p>
+              <p id="pad"><FaTree  size='15px'/>  ต้นไม้</p>
             </Menu.Item>
             <Menu.Item
               name='qa'
               active={activeItem === 'qa'}
               onClick={this.handleItemClick}
+              
             >
-              <p><FaQuestion  size='15px'/>  คำถามที่พบบ่อย</p>
-            </Menu.Item>
-       </Menu> 
+              <p id="pad"><FaQuestion  size='15px'/>  คำถามที่พบบ่อย</p>
+              </Menu.Item>
+       </Menu>
+       <Button id="logout" color='red' >ออกจากระบบ</Button> 
       </Col>
       <Col xs={6} md={8} ls={8} xl={8}>
       <Segment>Mood</Segment>

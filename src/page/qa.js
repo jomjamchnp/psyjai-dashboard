@@ -10,7 +10,7 @@ import { MdMood } from "react-icons/md";
 import { GrArticle } from "react-icons/gr";
 // import {browserHistory} from 'react-router';
 import { history } from '../history';
-class Intervention extends React.Component {
+class qa extends React.Component {
   constructor(props) {
     super(props);
      this.state = {     
@@ -109,7 +109,7 @@ class Intervention extends React.Component {
        <Button id="logout" color='red' >ออกจากระบบ</Button> 
       </Col>
       <Col xs={6} md={8} ls={8} xl={8}>
-      <Segment>Intervention</Segment>
+      <Segment>Q&A</Segment>
       </Col>
       </Row>
       </Container>
@@ -120,5 +120,5 @@ class Intervention extends React.Component {
        
     );
   }
-}export default Intervention;
+}export default qa;
 

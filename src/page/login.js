@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TextInput, Alert, ActivityIndicator } from 'react-native';
-import { Segment } from 'semantic-ui-react'
+import { Segment,Label } from 'semantic-ui-react'
 import { Col,Form,Card,Button, } from 'react-bootstrap'
 import '../css/login.css'
 //import firebase from '../../function/firebaseConfig';
@@ -9,15 +9,20 @@ import { useHistory } from "react-router-dom";
 import firebase from '../firebasedb/firebaseconfig';
 
 class LOGIN extends React.Component {
-    constructor() {   
+    
+    constructor(props) {   
     super();
     this.state = { 
+      displayName: '',
       email: '', 
       password: '',
       isLoading: false
     }
   }
- 
+  handleclick = () => {
+    history.push('/signup')
+  }
+
   updateInputVal = (val, prop) => {
     const state = this.state;
     state[prop] = val;
@@ -28,7 +33,6 @@ class LOGIN extends React.Component {
   userLogin = async () => {
     if(Object.keys(this.state.email).length === 0 && Object.keys(this.state.password).length === 0) {
       console.log('Enter details to signin!')
-
     } else {
       this.setState({
         isLoading: true,
@@ -37,20 +41,27 @@ class LOGIN extends React.Component {
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
-        console.log(res)
         console.log('User logged-in successfully!')
+        console.log(this.state.displayName)
         this.setState({
           isLoading: false,
+          displayName:'',
           email: '', 
           password: ''
-        }) 
+        })
         history.push('/dashboard')
+
       })
       .catch(error => this.setState({ errorMessage: error.message }))
     }
+    
   }
-
-  render() {
+  render(){
+    var user = firebase.auth().currentUser;
+    var name;
+    if (user != null) 
+    {  name = user.displayName; 
+    }
     if(this.state.isLoading){
       return(
         <View style={styles.preloader}>
@@ -58,7 +69,7 @@ class LOGIN extends React.Component {
         </View>
       )
     }    
-    return (
+    return ( 
         <div class="bg">
           <Card id="login" style={{width:'30em'}}>
           <form>
@@ -74,6 +85,9 @@ class LOGIN extends React.Component {
                   this.updateInputVal(e.target.value, 'email')
                   this.setState({
                     email : this.state.email
+                  })
+                  this.setState({
+                    displayName : name
                   })
                 }}
                 // onChangeText={(val) => this.updateInputVal(val, 'email')}
@@ -106,67 +120,17 @@ class LOGIN extends React.Component {
           {/* <p className="forgot-password text-right">
               Forgot <a href="#">password?</a>
           </p> */}
-          {/* <p id="logintext" 
+          <Label onClick={()=>this.handleclick()}>
+          คุณยังไม่มีบัญชีผู้ใช้งาน? ลงทะเบียน
+          </Label>
+                  {/* <p id="logintext" 
           onPress={() => this.props('Login')}>
           Don't have account? Click here to sign up
           </p> */}
           </form> 
           </Card>  
-         {/* <TextInput
-          placeholder="Email"
-          value={this.state.email}
-          onChangeText={(val) => this.updateInputVal(val, 'email')}
-        /> */}
-        {/* <TextInput
-          style={styles.inputStyle}
-          placeholder="Password"
-          value={this.state.password}
-          onChangeText={(val) => this.updateInputVal(val, 'password')}
-          maxLength={15}
-          secureTextEntry={true}
-        />   
-        
-
-        <Text 
-          style={styles.loginText}
-          onPress={() => this.props('register')}>
-          Don't have account? Click here to signup
-        </Text>  */}
         </div>
-          //     {/* <Card id="login" style={{width:'30em'}}>
-          //     <p id="header">ยินดีต้อนรับ!</p>
-          //     <Form>
-          //     <Col xs={12}>
-          //     <Form.Group controlId="exampleForm.ControlInput1">
-          //     <Form.Label>บัญชีผู้ใช้</Form.Label>
-          //     <Form.Control placeholder="บัญชีผู้ใช้" onChange={e => {
-          //       this.setState({
-          //           username: e.target.value
-          //       })
-          //     }}/>
-          //     </Form.Group>
-          //     </Col>
-          // <  Col xs={12}>
-          // <Form.Group controlId="formGroupPassword">
-          // <Form.Label>รหัสผ่าน</Form.Label>
-          // <Form.Control type="password" placeholder="รหัสผ่าน" onChange={e => {
-          //   this.setState({
-          //       password: e.target.value
-          //   })
-          // }}/>
-          // </Form.Group>
-          // {
-          //  this.state.status == "no" ?
-          //   <Form.Label id="err">*บัญชีผู้ใช้และรหัสผ่านไม่ถูกต้อง</Form.Label> : null
-          // }
-          // </Col>
-          // <Button id="cen" variant="secondary" onClick={this.login}>เข้าสู่ระบบ</Button>
-          // {/* <p id="regis">คุณยังไม่มีบัญชีผู้ใช้งาน? <a href="/register">ลงทะเบียน</a></p> */}
-          // </Form>
-          // </Card> 
-          // </div>*/}
-      
-                                
+                     
       
     );
   }
