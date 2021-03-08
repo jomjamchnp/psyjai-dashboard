@@ -6,6 +6,8 @@ import {CanvasJSChart} from 'canvasjs-react-charts'
 import avatar from '../images/matthew.png'; 
 import '../css/dash.css'
 import 'semantic-ui-css/semantic.css';
+// import DateFnsUtils from "@date-io/date-fns";
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import { Segment,Label,Menu,Input,Image,Icon } from 'semantic-ui-react'
 import { Col,Row,Button,Grid,Container } from 'react-bootstrap'
 import { FaHome,FaTheaterMasks,FaRegLightbulb,FaRegEdit,FaTree,FaQuestion} from "react-icons/fa";
@@ -47,7 +49,13 @@ class Mood extends React.Component {
 //     });
 // } 
   render() {
-   
+    const [selectedDate, setSelectedDate] = React.useState<Date | null>(
+      new Date("2014-08-18T21:11:54")
+    );
+  
+    const handleDateChange = (date: Date | null) => {
+      setSelectedDate(date);
+    };
     
     const options = {
 			exportEnabled: true,
@@ -149,10 +157,15 @@ class Mood extends React.Component {
       </Col>
       <Col xs={6} md={8} ls={8} xl={8}>
       <Segment>
-      <YearMonthPicker
-          closeOnSelect
-          onChange={this.handleChange.bind(this)}
-        />
+      <DatePicker
+        variant="inline"
+        openTo="year"
+        views={["year", "month"]}
+        label="Year and Month"
+        helperText="Start from year selection"
+        value={selectedDate}
+        onChange={handleDateChange}
+/>
       <CanvasJSChart options = {options}/>
       </Segment>
       </Col>
