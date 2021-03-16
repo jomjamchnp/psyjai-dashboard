@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TextInput, Alert, ActivityIndicator } from 'react-native';
-import { Segment,Label } from 'semantic-ui-react'
-import { Col,Form,Card,Button, } from 'react-bootstrap'
+import { Label,Menu,Input,Image,Icon,Popup,Rating,Dropdown,Card} from 'semantic-ui-react'
+import { Col,Form,Button } from 'react-bootstrap'
 import '../css/login.css'
 //import firebase from '../../function/firebaseConfig';
 import { history } from '../history'
 import { useHistory } from "react-router-dom";
 import firebase from '../firebasedb/firebaseconfig';
-
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import provider from './facebook.js' 
 class LOGIN extends React.Component {
     
     constructor(props) {   
@@ -16,7 +17,8 @@ class LOGIN extends React.Component {
       displayName: '',
       email: '', 
       password: '',
-      isLoading: false
+      isLoading: false,
+      isSignedIn: false // Local signed-in state.
     }
   }
   handleclick = () => {
@@ -29,7 +31,30 @@ class LOGIN extends React.Component {
     this.setState(state);
     console.log(state)
   }
+  uiConfig = {
+    // Popup signin flow rather than redirect flow.
+    signInFlow: 'popup',
+    // We will display Google , Facebook , Etc as auth providers.
+    signInOptions: [
+      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    ],
+    callbacks: {
+      // Avoid redirects after sign-in.
+      signInSuccess: () => false
+    }
+  };
 
+  // Listen to the Firebase Auth state and set the local state.
+  componentDidMount() {
+    this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
+        (user) => this.setState({isSignedIn: !!user})
+    );
+  }
+  
+  // Make sure we un-register Firebase observers when the component unmounts.
+  componentWillUnmount() {
+    this.unregisterAuthObserver();
+  }
   userLogin = async () => {
     if(Object.keys(this.state.email).length === 0 && Object.keys(this.state.password).length === 0) {
       console.log('Enter details to signin!')
@@ -39,39 +64,96 @@ class LOGIN extends React.Component {
       })
       firebase
       .auth()
-      .signInWithEmailAndPassword(this.state.email, this.state.password)
-      .then((res) => {
-        console.log('User logged-in successfully!')
-        console.log(this.state.displayName)
+      .signInWithPopup(provider)
+      .then((result) => {
+        /** @type {firebase.auth.OAuthCredential} */
+        var credential = result.credential;
+        // The signed-in user info.
+        var user = result.user;
         this.setState({
-          isLoading: false,
-          displayName:'',
-          email: '', 
-          password: ''
+          displayName: user,
         })
-        history.push('/dashboard')
-
-      })
-      .catch(error => this.setState({ errorMessage: error.message }))
-    }
+        console.log(user)
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        var accessToken = credential.accessToken;
     
-  }
-  render(){
-    var user = firebase.auth().currentUser;
-    var name;
-    if (user != null) 
-    {  name = user.displayName; 
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+    
+        // ...
+      });
+    //   firebase
+    //   .auth()
+    //   .signInWithEmailAndPassword(this.state.email, this.state.password)
+    //   .then((res) => {
+    //     console.log('User logged-in successfully!')
+    //     console.log(this.state.displayName)
+    //     this.setState({
+    //       isLoading: false,
+    //       displayName:'',
+    //       email: '', 
+    //       password: ''
+    //     })
+    //     history.push('/dashboard')
+
+    //   })
+    //   .catch(error => this.setState({ errorMessage: error.message }))
+    // }
+    
     }
+}
+  render(){
+    //var name = firebase.auth().currentUser.displayName
+    //console.log(this.displayName)
+    if (this.state.isSignedIn){
+      history.push({
+        pathname: '/dashboard',
+       // customNameData: name,
+      });
+    }
+    // var user = firebase.auth().currentUser;
+    // var name;
+    // if (user != null) 
+    // {  name = user.displayName; 
+    // }
     if(this.state.isLoading){
       return(
         <View style={styles.preloader}>
           <ActivityIndicator size="large" color="#9E9E9E"/>
         </View>
       )
-    }    
-    return ( 
+    }  
+    if (!this.state.isSignedIn) {
+      return (
         <div class="bg">
           <Card id="login" style={{width:'30em'}}>
+          <Card.Content header='กรุณาเข้าสู่ระบบ' />
+          <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()}/>
+          </Card>
+        </div>
+      );
+    }  
+    return ( 
+       
+        <div>
+          <Card id="login" style={{width:'30em'}}>
+            
+            <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
+            <Button onClick={() => firebase.auth().signOut()}>Sign-out</Button>
+          </Card>
+           
+          {/* //<Image size="tiny" id="photo" src={firebase.auth().currentUser.photoURL}/> */}
+          
+        
+          {/* <Card id="login" style={{width:'30em'}}>
           <form>
           <h3>Log in</h3>
           <div className="form-group">
@@ -119,16 +201,17 @@ class LOGIN extends React.Component {
           <button type="button" className="btn btn-dark btn-lg btn-block" onClick={() => this.userLogin()}>Sign in</button>
           {/* <p className="forgot-password text-right">
               Forgot <a href="#">password?</a>
-          </p> */}
+          </p> 
           <Label onClick={()=>this.handleclick()}>
           คุณยังไม่มีบัญชีผู้ใช้งาน? ลงทะเบียน
           </Label>
-                  {/* <p id="logintext" 
-          onPress={() => this.props('Login')}>
-          Don't have account? Click here to sign up
-          </p> */}
+          <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()}/>
+
+          <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
+          <Image id="photo" className="pic" src={firebase.auth().currentUser.photoURL}/>
+        <button onClick={() => firebase.auth().signOut()}>Sign-out</button>
           </form> 
-          </Card>  
+          </Card> */}  
         </div>
                      
       

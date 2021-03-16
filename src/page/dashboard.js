@@ -1,4 +1,4 @@
-import React from "react";
+import React ,{useState, useEffect} from "react";
 // import {Img} from 'react-image'
 import ImageUploader from 'react-images-upload';
 import avatar from '../images/matthew.png'; 
@@ -14,7 +14,6 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
 import { history } from '../history';
-import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import firebase from '../firebasedb/firebaseconfig';
 
@@ -24,16 +23,37 @@ import firebase from '../firebasedb/firebaseconfig';
 // https://sv1.picz.in.th/images/2021/03/07/D72hy2.png
 // https://sv1.picz.in.th/images/2021/03/07/D723T1.png
 
-
 class Dashboard extends React.Component {
-  constructor(props) {
-    super(props);
-     this.state = {     
-      pictures: [],
-    };
-     this.onDrop = this.onDrop.bind(this);
-  }
+  constructor(props) { 
+      super(props);
+      this.state = {     
+        pictures: [],
+        merchants:false,
+        setMerchants: false,
+      };
+      this.onDrop = this.onDrop.bind(this);
+    }
   state = { activeItem: 'home' }
+
+   getUsers() {
+    fetch('http://localhost:3001')
+      .then(response => {
+        return response.text();
+      })
+      .then(data => {
+        this.setMerchants(data);
+      });
+  }
+  
+  useEffect(){
+    this.getUsers();
+  }
+
+  
+  componentDidMount(){
+   // const name = this.props.location.customNameData
+  }
+  
   onDrop(picture) {
       this.setState({
           pictures: this.state.pictures,
@@ -73,7 +93,7 @@ class Dashboard extends React.Component {
     }
 
     const { activeItem } = this.state
-    
+    //console.log(firebase.auth().currentUser.displayName)
     return (
      <div >
       <Container fluid>
@@ -146,10 +166,12 @@ class Dashboard extends React.Component {
               <p id="pad"><FaQuestion  size='15px'/>  คำถามที่พบบ่อย</p>
               </Menu.Item>
        </Menu>
-       <Button id="logout" color='red' >ออกจากระบบ</Button> 
+       
+       <Button onClick={() => firebase.auth().signOut()} id="logout" color='red' >ออกจากระบบ</Button> 
       </Col>
       <Col xs={6} md={8} ls={8} xl={9}>
       <Segment>
+      {this.merchants ? this.merchants : 'There is no merchant data available'}
       <FullCalendar   
         plugins={[ dayGridPlugin, interactionPlugin ]}
         initialView="dayGridMonth"

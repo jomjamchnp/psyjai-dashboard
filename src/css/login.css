@@ -24,6 +24,7 @@ body, html, .App, #root {
 
 
 #login{
+    text-align: center;
     margin: auto; 
     margin-top: 7%;
     padding: 4%;
