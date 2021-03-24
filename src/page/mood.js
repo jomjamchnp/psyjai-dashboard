@@ -103,7 +103,7 @@ class Mood extends React.Component {
     const year = [
       { key: 1, text: '2019' ,value:1},
       { key: 2, text: '2020' ,value:2},
-      { key: 2, text: '2021' ,value:2},
+      { key: 3, text: '2021' ,value:3},
     ]
 
 
@@ -183,8 +183,20 @@ class Mood extends React.Component {
       </Col>
       <Col xs={6} md={8} ls={8} xl={8}>
       <Segment>
-      <Dropdown clearable options={month} selection />
-      <Dropdown clearable options={year} selection />
+      <Dropdown
+        search
+        selection
+        wrapSelection={false}
+        options={month}
+        placeholder='เลือกเดือน'
+      />
+      <Dropdown
+        search
+        selection
+        wrapSelection={false}
+        options={year}
+        placeholder='เลือกปี'
+      />
       <CanvasJSChart options = {options}/>
       </Segment>
       </Col>

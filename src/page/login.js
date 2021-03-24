@@ -5,23 +5,30 @@ import { Col,Form,Button } from 'react-bootstrap'
 import '../css/login.css'
 //import firebase from '../../function/firebaseConfig';
 import { history } from '../history'
-import { useHistory } from "react-router-dom";
+import { useHistory ,useLocation} from "react-router-dom";
 import firebase from '../firebasedb/firebaseconfig';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import provider from './facebook.js' 
+
+
+
+
+
+
 class LOGIN extends React.Component {
-    
     constructor(props) {   
     super();
+    //this.sigin_success = this.sigin_success.bind(this);
     this.state = { 
       displayName: '',
       email: '', 
       password: '',
       isLoading: false,
-      isSignedIn: false // Local signed-in state.
+      isSignedIn: false, // Local signed-in state.
     }
   }
   handleclick = () => {
+    const history = () => useHistory;
     history.push('/signup')
   }
 
@@ -31,6 +38,7 @@ class LOGIN extends React.Component {
     this.setState(state);
     console.log(state)
   }
+
   uiConfig = {
     // Popup signin flow rather than redirect flow.
     signInFlow: 'popup',
@@ -48,7 +56,7 @@ class LOGIN extends React.Component {
   componentDidMount() {
     this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
         (user) => this.setState({isSignedIn: !!user})
-    );
+    );    
   }
   
   // Make sure we un-register Firebase observers when the component unmounts.
@@ -90,6 +98,8 @@ class LOGIN extends React.Component {
     
         // ...
       });
+    }
+  }
     //   firebase
     //   .auth()
     //   .signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -107,17 +117,33 @@ class LOGIN extends React.Component {
     //   })
     //   .catch(error => this.setState({ errorMessage: error.message }))
     // }
-    
-    }
-}
+    // UserForm = (props) => {
+    //   const [state, setState] = useState({
+    //     name: '',
+    //   });
+    // }
+
   render(){
-    //var name = firebase.auth().currentUser.displayName
+    // const sigin_success = (props) => {
+    //   let history = useHistory();
+    //   history.push({
+    //     pathname: '/dashboard',
+    //     Data : firebase.auth().currentUser.displayName
+    //   });
+    // }
+    //var name = 
     //console.log(this.displayName)
     if (this.state.isSignedIn){
+      console.log(firebase.auth().currentUser.displayName)
       history.push({
-        pathname: '/dashboard',
-       // customNameData: name,
-      });
+            pathname: '/dashboard',
+            Data : firebase.auth().currentUser.displayName
+          });
+      //this.sigin_success()
+      // this.props.history.push({
+      //   pathname: '/dashboard',
+      //   Data : firebase.auth().currentUser.displayName
+      // });
     }
     // var user = firebase.auth().currentUser;
     // var name;
@@ -141,11 +167,10 @@ class LOGIN extends React.Component {
         </div>
       );
     }  
+
     return ( 
-       
         <div>
           <Card id="login" style={{width:'30em'}}>
-            
             <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
             <Button onClick={() => firebase.auth().signOut()}>Sign-out</Button>
           </Card>

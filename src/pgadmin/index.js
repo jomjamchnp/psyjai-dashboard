@@ -6,7 +6,7 @@ const express = require('express')
 const cors = require('cors')
 // const pool = require('./merchant_model').pool
 const client = require('./dbConfig')
-const { response } = require('express')
+// const { response } = require('express')
 const app = express()
 const port = 3001
 
@@ -28,7 +28,7 @@ app.get('/', async (req, res) => {
   try{
     await client.getUsers()
     .then(response =>{
-        console.log("response: ",response)
+        //console.log("response: ",response)
         res.status(200).send(response);
     })
     .catch(e =>{
@@ -62,4 +62,4 @@ app.listen(port, () => {
   console.log(`App running on port ${port}.`)
 })
 //select users.id,users.first_name,users.last_name,users.app,users.botorigin,botorigins.botname from users INNER join botorigins on users.botorigin = botorigins.botorigin WHERE botorigins.botname Like "Covid Bot Test"'
-// ReactDOM.render(<App />, document.getElementById('root'));
+//ReactDOM.render(<App />, document.getElementById('root'));

@@ -29,3 +29,8 @@ body, html, .App, #root {
   margin-bottom: 10px;
   
 }
+
+#calendar{
+  width: 100%;
+  height: 100%;
+}
