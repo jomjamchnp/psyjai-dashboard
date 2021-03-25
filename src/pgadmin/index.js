@@ -24,9 +24,23 @@ app.use(function (req, res, next) {
 });
 
 // api get all
-app.get('/', async (req, res) => {
+app.get('/emotion_class', async (req, res) => {
   try{
     await client.getUsers()
+    .then(response =>{
+        //console.log("response: ",response)
+        res.status(200).send(response);
+    })
+    .catch(e =>{
+        res.status(500).send(e);
+    })
+  }catch(err){
+    console.log(err)
+  }
+})
+app.get('/intervention', async (req, res) => {
+  try{
+    await client.getIntervention()
     .then(response =>{
         //console.log("response: ",response)
         res.status(200).send(response);

@@ -48,7 +48,7 @@ class Dashboard extends React.Component {
 
   fetchUsers() {
     // Where we're fetching data from
-    fetch('http://localhost:3001/')
+    fetch('http://localhost:3001/emotion_class')
       // We get the API response and receive data in JSON format...
       .then(response => response.json())
       // ...then we update the users state
@@ -124,24 +124,7 @@ class Dashboard extends React.Component {
 
     // If there is a delay in data, let's let the user know it's loading
 
-    
 
-    // const SecondPage = props => {
-    //   const location = useLocation();
-    
-    //   useEffect(() => {
-
-    //     console.log(location.state.detail); // result: 'some_value'
-    //   }, [location]);
-    
-    // };
-
-    // const Details = props => {
-    //   const { name } =
-    //     (props.location && props.location.state) || {};
-    //     console.log(name)
-    // }
-    //console.log(Details.name)
     function renderEventContent(eventInfo) {
       //console.log(eventInfo.event.title) 
       var text = eventInfo.event.title
@@ -165,10 +148,10 @@ class Dashboard extends React.Component {
     //     (this.props.location && this.props.location.Data) || {};
     //   console.log(this.props.location.Data)
     // }
-    // console.log(this.props.location.Data)
+    // console.log(users.map(user => (
+    //   {user.timestamp)
+    // )))
     const { activeItem } = this.state
-    
-    //console.log(user.timestamp)
     //console.log(firebase.auth().currentUser.displayName)
     return (
     
@@ -271,13 +254,15 @@ class Dashboard extends React.Component {
       users.map(user => {
         const { first_name, last_name, timestamp } = user;
         var timestring = timestamp.split('T')[0]
-        console.log(user.timestamp.split('T')[0])
+        //console.log(user.timestamp.split('T')[0])
+                
         // this.setState({
         //   time:user.timestamp.split('T')[0]
         // })
         return (
           <div> 
             {/* key={first_name} */}
+            
             <p>Name: {first_name} {last_name}</p>
             <p>TimeStamp: {timestring}</p>
             {/* <FullCalendar
@@ -291,6 +276,7 @@ class Dashboard extends React.Component {
     // If there is a delay in data, let's let the user know it's loading
     ) : (
       <h3>Loading...</h3>
+      
     )}
 
       <FullCalendar   
@@ -304,7 +290,7 @@ class Dashboard extends React.Component {
           eventBackgroundColor="white"
           eventContent={renderEventContent}
           events={[  
-            { date: users , title:'https://sv1.picz.in.th/images/2021/03/07/D72Bcg.png'},
+            { date: '2021-03-18' , title:'https://sv1.picz.in.th/images/2021/03/07/D72Bcg.png'},
             //{ date: '2021-03-15', title:'https://sv1.picz.in.th/images/2021/03/07/D723T1.png'}
           ]
         }

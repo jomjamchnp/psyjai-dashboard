@@ -28,5 +28,23 @@ const getUsers = () => {
      }) 
   }
   
+  const getIntervention = () => {
+    return new Promise( async function(resolve, reject) {
+        await client.query('select users.timestamp,users.first_name,users.last_name,botorigins.botname,variablestransaction.variable,variablestransaction.value from users INNER join botorigins on users.botorigin = botorigins.botorigin INNER join variablestransaction on variablestransaction.userid = users.id WHERE botorigins.botname Like $1 and variablestransaction.variable Like $2 ORDER By users.first_name',['Covid Bot Test%','Intervention'], (error, results) => {
+        if (error) {
+            console.log(error)
+            reject(error)
+        }
+        resolve(results.rows.filter(x => x.first_name === 'พัชรา'));
+        console.log(results.rows[0].first_name)
+        console.log(typeof(results))
+        console.log(results.rows.filter(x => x.first_name === 'พัชรา'))
+        //var name = results.rows[0].first_name+" "+results.rows[0].last_name
+        // var test = JSON.parse(results);
+        // console.log(test)
 
-module.exports = { getUsers }
+        })
+     }) 
+  }
+
+module.exports = { getUsers,getIntervention }

@@ -14,7 +14,13 @@ class Intervention extends React.Component {
   constructor(props) {
     super(props);
      this.state = {     
-      pictures: []
+      pictures: [],
+      isLoading: false,
+      users: [],
+      error: null,
+      time: [],
+      firstname: '',
+      lastname: ''
       
     };
      this.onDrop = this.onDrop.bind(this);
@@ -31,9 +37,49 @@ class Intervention extends React.Component {
     
     )
 
+    fetchIntervention() {
+      // Where we're fetching data from
+      fetch('http://localhost:3001/intervention')
+        // We get the API response and receive data in JSON format...
+        .then(response => response.json())
+        // ...then we update the users state
+        .then(data =>
+          this.setState({
+            users: data,
+            isLoading: false,
+          })
+        )
+        // Catch any errors we hit and update the app
+        .catch(error => this.setState({ error, isLoading: false }));
+    }
+  
+    
+    
+    componentDidMount() {
+      this.fetchIntervention();
+    }
   render() {
+    
+    const {isLoading, users, error } = this.state;
     const { activeItem } = this.state
     console.log(this.state.pictures)
+
+    let itemsToRender;
+    if (isLoading) {
+      itemsToRender = users.map(user => {
+        const { first_name, last_name, value } = user;
+        return (
+          <div key={first_name}> 
+            <p>Name: {first_name} {last_name}</p>
+            <p>Value: {value}</p>
+            <hr />
+          </div>
+        )})
+    } 
+    else {
+      itemsToRender = "Loading...";
+    }
+
     return (
      <div >
       <Container fluid>
@@ -109,7 +155,28 @@ class Intervention extends React.Component {
        <Button id="logout" color='red' >ออกจากระบบ</Button> 
       </Col>
       <Col xs={6} md={8} ls={8} xl={8}>
-      <Segment>Intervention</Segment>
+      <Segment>
+      <h3>Intervention</h3>
+      {/* {this.error ? <p>{this.error.message}</p> : null} */}
+      {!isLoading ? (
+      users.map(user => {
+        const { first_name, last_name, value } = user;
+        return (
+          <div key={first_name}> 
+            <p>Name: {first_name} {last_name}</p>
+            <p>Value: {value}</p>
+            <hr />
+          </div>
+        );
+        
+      })
+    // If there is a delay in data, let's let the user know it's loading
+    ) : (
+      <h3>Loading...</h3>
+      
+    )}
+      {itemsToRender}
+      </Segment>
       </Col>
       </Row>
       </Container>
