@@ -1,6 +1,6 @@
 import React,{component} from "react";
 // import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 // Page
 import Dashboard from "./page/dashboard";
 import Login from "./page/login.js"
@@ -11,64 +11,114 @@ import Qa from "./page/qa.js"
 import Tree from "./page/tree"
 import Result from "./page/result"
 import Intervention from "./page/intervention"
+import MenuBar from "./page/menu"
+import firebase from './firebasedb/firebaseconfig';
+import { Menu } from "material-ui";
+
 
 //const History = createHistory();   
 
 export default class AppRouter extends React.Component {
-    render(){
-        return(
-            // <Router history={history}>
-                    
-            //         <Route path="/login"/> <Login />
-            //         <Route path="/signup"/> <Signup/>
-            //         <Route path="/dashboard"> </Route>
-            //         <Route path="/mood" component={Mood}></Route>
-            //         <Route path="/qa" component={Qa}></Route>
-            //         <Route path="/intervention" component={Intervention}></Route>
-            //         <Route path="/tree" component={Tree}></Route>
-            //         <Route path="/result" component={Result}></Route>
-            //         <Route path="/homework" component={Homework}></Route>
-    //     <BrowserRouter>
-    //     <div>
-    //     <Route path="/login" component={Login}></Route>
-    //     <Route path="/dashboard" component={Dashboard}></Route>    
-    //     <Route path="/mood" component={Mood}></Route>
-    //     <Route path="/qa" component={Qa}></Route>
-    //     <Route path="/intervention" component={Intervention}></Route>
-    //     <Route path="/tree" component={Tree}></Route>
-    //     <Route path="/result" component={Result}></Route>
-    //     <Route path="/homework" component={Homework}></Route>
-    //     </div>
-    //   </BrowserRouter>        
-            <Router>
-                <Route path="/login">
-                    <Login />
-                </Route>
-                <Route path="/signup">
-                    <Signup />
-                </Route>
-                <Route path="/dashboard" >
-                    <Dashboard />
-                </Route>
-                <Route path="/mood">
-                    <Mood />
-                </Route>
-                <Route path="/qa">
-                    <Qa />
-                </Route>
-                <Route path="/intervention">
-                    <Intervention />
-                </Route>
-                <Route path="/tree">
-                    <Tree />
-                </Route>
-                <Route path="/result">
-                    <Result />
-                </Route>
-                <Route path="/homework">
-                    <Homework />
-                </Route>
-            </Router>
-        );
+    constructor(props) {
+        super(props)
+        this.state = { 
+            currentUser: null,
+            logIn: localStorage.getItem('login')
+
+        }     
     }
+
+    componentDidMount() {
+        const log = localStorage.getItem('login')
+        if(log == "null" || log == null){
+            localStorage.setItem('login',false)
+            this.setState({
+                logIn: localStorage.getItem('login')
+            })
+        }
+
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                localStorage.setItem('login',true)
+                this.setState({
+                    currentUser: user,
+                    logIn: localStorage.getItem('login')
+                })
+            }
+        })
+    }
+
+    render(){ 
+            if(this.state.logIn == "false"){
+                return(
+                    <Router>
+                        <Route path="/"><Login /></Route>
+                        <Redirect to="/" />
+                    </Router>
+                );
+            }else if(this.state.logIn == "true"){
+                return(
+                    <Router>
+                        <MenuBar path="/"/>
+                        {/* <Switch>
+                            <Route path="/dashboard" >
+                                <Dashboard/>
+                            </Route>
+                            <Route path="/mood">
+                                <Mood />
+                            </Route>
+                            <Route path="/qa">
+                                <Qa />
+                            </Route>
+                            <Route path="/intervention">
+                                <Intervention />
+                            </Route>
+                            <Route path="/tree">
+                                <Tree />
+                            </Route>
+                            <Route path="/result">
+                                <Result />
+                            </Route>
+                            <Route path="/homework">
+                                <Homework />
+                            </Route>
+                        </Switch> */}
+                    </Router> 
+                );
+            }else{
+                return (
+                    <div>
+                    </div>   
+                );
+            }
 }
+
+/* <Router>
+    <Route path="/login">
+        <Login />
+    </Route>
+    <Route path="/signup">
+        <Signup />
+    </Route>
+    <Route path="/dashboard" >
+        <Dashboard />
+    </Route>
+    <Route path="/mood">
+        <Mood />
+    </Route>
+    <Route path="/qa">
+        <Qa />
+    </Route>
+    <Route path="/intervention">
+        <Intervention />
+    </Route>
+    <Route path="/tree">
+        <Tree />
+    </Route>
+    <Route path="/result">
+        <Result />
+    </Route>
+    <Route path="/homework">
+        <Homework />
+    </Route>
+</Router> */}

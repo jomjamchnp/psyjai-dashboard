@@ -23,8 +23,6 @@ import firebase from '../firebasedb/firebaseconfig';
 // https://sv1.picz.in.th/images/2021/03/07/D72hy2.png // white 
 // https://sv1.picz.in.th/images/2021/03/07/D723T1.png // sad-blue
 
-
-
 class Dashboard extends React.Component {
   constructor(props) { 
       super(props);
@@ -38,6 +36,7 @@ class Dashboard extends React.Component {
         users: [],
         error: null,
         time: [],
+        timestamp:  []
         
         // DisplayName : this.location.Data,
       };
@@ -52,11 +51,52 @@ class Dashboard extends React.Component {
       // We get the API response and receive data in JSON format...
       .then(response => response.json())
       // ...then we update the users state
-      .then(data =>
-        this.setState({
-          users: data,
-          isLoading: false,
-        })
+      .then(data => {
+          this.setState({
+            users: data,
+            isLoading: false,
+          })
+          let obj = []
+          for(let i=0; i< data.length; i++){
+            let img = ""
+            let time = data[i].timestamp.split("T")
+            if( data[i].value == "สบายๆ"){
+              img = "https://sv1.picz.in.th/images/2021/03/07/D72N0n.png"
+            }
+            if( data[i].value == "เฉยๆ"){
+                img = "https://sv1.picz.in.th/images/2021/03/07/D72hy2.png"
+            }
+            if( data[i].value == "อารมณ์ดี"){
+              img = "https://sv1.picz.in.th/images/2021/03/07/D72f2W.png"
+            }
+            if( data[i].value == "สงบ"){
+              img = "https://sv1.picz.in.th/images/2021/03/07/D72N0n.png"
+            }
+
+            // check emotion on this day (get latest emotion)
+            if(data[i+1] != null){
+              let timeNext = data[i+1].timestamp.split("T")
+              console.log(time[0],timeNext[0])
+              if(time[0] != timeNext[0]){
+                  obj.push({
+                    date: time[0],
+                    title: img
+                  })
+              }
+            }else{
+              console.log(time[0],i)
+              obj.push({
+                date: time[0],
+                title: img
+              })
+            }
+           
+          }
+          // add event on calendar
+          this.setState({
+              timestamp: obj
+          })
+         }
       )
       // Catch any errors we hit and update the app
       .catch(error => this.setState({ error, isLoading: false }));
@@ -86,6 +126,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
+    console.log("time : ",this.state.timestamp)
     const {isLoading, users, error } = this.state;
     // if(!this.state.isLoading){
     //   users.map(user => {
@@ -152,133 +193,9 @@ class Dashboard extends React.Component {
     //   {user.timestamp)
     // )))
     const { activeItem } = this.state
-    //console.log(firebase.auth().currentUser.displayName)
     return (
-    
-     <div >
-      <Container fluid>
-        <Row>
-        <Col xs={6} md="auto">
-          <Menu vertical>   
-          <Menu.Item>
-            {}
-              <Input icon='search' placeholder='Search ' />
-            </Menu.Item>
-            <Menu.Item 
-              name='profile'
-              active={activeItem === 'profile'}
-              fitted='horizontally'
-            >
-            <Image src={avatar}  size='small' centered circular/>
-            { this.name }
-            </Menu.Item>
-            <Menu.Item
-              name='dashboard'
-              active={activeItem === 'dashboard'}
-              onClick={this.handleItemClick}
-              
-            >
-            <p id="pad"><FaHome size='15px' />  หน้าแรก</p>
-            </Menu.Item>
-            <Menu.Item
-              name='mood'
-              active={activeItem === 'mood'}
-              onClick={this.handleItemClick}
-            >
-            <p id="pad"><FaTheaterMasks  size='15px'/>  อารมณ์(Moods)</p>
-            </Menu.Item>
-            <Menu.Item
-              name='intervention'
-              active={activeItem === 'intervention'}
-              onClick={this.handleItemClick}       
-            >
-              <p id="pad"><FaRegLightbulb  size='15px'/>  สิ่งที่ได้เรียนรู้</p>
-            </Menu.Item>
-            <Menu.Item
-              name='homework'
-              active={activeItem === 'homework'}
-              onClick={this.handleItemClick}
-              
-            >
-              <p id="pad"><FaRegEdit  size='15px'/>  การบ้าน</p>
-            </Menu.Item>
-            <Menu.Item
-              name='result'
-              active={activeItem === 'result'}
-              onClick={this.handleItemClick}
-              
-            >
-              <p id="pad"><GrArticle  size='15px'/>  ผลการประเมินอารมณ์</p>
-            </Menu.Item>
-            <Menu.Item
-              name='tree'
-              active={activeItem === 'tree'}
-              onClick={this.handleItemClick}
-              
-            >
-              <p id="pad"><FaTree  size='15px'/>  ต้นไม้</p>
-            </Menu.Item>
-            <Menu.Item
-              name='qa'
-              active={activeItem === 'qa'}
-              onClick={this.handleItemClick}
-              
-            >
-              <p id="pad"><FaQuestion  size='15px'/>  คำถามที่พบบ่อย</p>
-              </Menu.Item>
-       </Menu>
-       
-       <Button onClick={() => firebase.auth().signOut()} id="logout" color='red' >ออกจากระบบ</Button> 
-      </Col>
-      <Col xs={6} md={8} ls={8} xl={9}>
       <Segment id="calendar">
       {this.error ? <p>{this.error.message}</p> : null}
-      {/* <Button onClick={()=> getUsers}/>
-      {this.merchants ? this.merchants : 'There is no merchant data available'} */}
-      {/* {!isLoading ? (
-        users.map(user => {
-          const { username, name, email } = user;
-          return (
-            <div key={username}>
-              <p>Name: {name}</p>
-              <p>Email Address: {email}</p>
-              <hr />
-            </div>
-          );
-        })
-      // If there is a delay in data, let's let the user know it's loading
-      ) : (
-        <h3>Loading...</h3>
-      )} */}
-      {!isLoading ? (
-      users.map(user => {
-        const { first_name, last_name, timestamp } = user;
-        var timestring = timestamp.split('T')[0]
-        //console.log(user.timestamp.split('T')[0])
-                
-        // this.setState({
-        //   time:user.timestamp.split('T')[0]
-        // })
-        return (
-          <div> 
-            {/* key={first_name} */}
-            
-            <p>Name: {first_name} {last_name}</p>
-            <p>TimeStamp: {timestring}</p>
-            {/* <FullCalendar
-          eventAdd={this.handleEventAdd}
-        /> */}
-            <hr />
-          </div>
-        );
-        
-      })
-    // If there is a delay in data, let's let the user know it's loading
-    ) : (
-      <h3>Loading...</h3>
-      
-    )}
-
       <FullCalendar   
           plugins={[ dayGridPlugin, interactionPlugin ]}
           initialView="dayGridMonth"
@@ -286,48 +203,13 @@ class Dashboard extends React.Component {
           eventBorderColor="white"
           //height= "650%"
           //size = "80%"
-          height = "90%"
+          height = "100%"
           eventBackgroundColor="white"
           eventContent={renderEventContent}
-          events={[  
-            { date: '2021-03-18' , title:'https://sv1.picz.in.th/images/2021/03/07/D72Bcg.png'},
-            //{ date: '2021-03-15', title:'https://sv1.picz.in.th/images/2021/03/07/D723T1.png'}
-          ]
-        }
+          events={this.state.timestamp}
           dateClick={this.handleDateClick}
-        
       />
-    
-
-      {/* <FullCalendar   
-        plugins={[ dayGridPlugin, interactionPlugin ]}
-        initialView="dayGridMonth"
-        themeSystem="Flatly"
-        eventBorderColor="white"
-        //height= "650%"
-        //size = "80%"
-        height = "90%"
-        eventBackgroundColor="white"
-        eventContent={renderEventContent}
-        events={[
-          
-          { date: this.time, title:'https://sv1.picz.in.th/images/2021/03/07/D72Bcg.png'},
-          //{ date: '2021-03-15', title:'https://sv1.picz.in.th/images/2021/03/07/D723T1.png'}
-        ]
-      }
-        dateClick={this.handleDateClick}
-       
-      /> */}
-      
-      </Segment>
-      </Col>
-      </Row>
-      </Container>
-     </div>
-      
-        
-        
-       
+      </Segment>    
     );
   }
 }export default Dashboard;

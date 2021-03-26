@@ -4,7 +4,7 @@
 body {
     display: flex;
     font-family: 'Mitr', sans-serif;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     display: flex;
   }
   
@@ -26,12 +26,13 @@ body, html, .App, #root {
 #login{
     text-align: center;
     margin: auto; 
-    margin-top: 7%;
-    padding: 4%;
+    /* margin-top: 7%; */
+    /* padding: 4%; */
     border: 2px;
     border-radius: 15px;
     width: 250px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    vertical-align: middle;
 }
 
 #cen{

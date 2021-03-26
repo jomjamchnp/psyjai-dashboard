@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TextInput, Alert, ActivityIndicator } from 'react-native';
-import { Label,Menu,Input,Image,Icon,Popup,Rating,Dropdown,Card} from 'semantic-ui-react'
+import { Card,Divider } from 'semantic-ui-react'
 import { Col,Form,Button } from 'react-bootstrap'
 import '../css/login.css'
 //import firebase from '../../function/firebaseConfig';
@@ -9,11 +9,6 @@ import { useHistory ,useLocation} from "react-router-dom";
 import firebase from '../firebasedb/firebaseconfig';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import provider from './facebook.js' 
-
-
-
-
-
 
 class LOGIN extends React.Component {
     constructor(props) {   
@@ -84,7 +79,7 @@ class LOGIN extends React.Component {
         console.log(user)
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         var accessToken = credential.accessToken;
-    
+        localStorage.setItem('login',true);
         // ...
       })
       .catch((error) => {
@@ -160,10 +155,14 @@ class LOGIN extends React.Component {
     if (!this.state.isSignedIn) {
       return (
         <div class="bg">
-          <Card id="login" style={{width:'30em'}}>
-          <Card.Content header='กรุณาเข้าสู่ระบบ' />
-          <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()}/>
-          </Card>
+   
+            <Card id="login" style={{width:'30em',height:'17em'}}>
+            <label style={{color: '#008891',fontSize: '30px',marginTop: '25px'}}>Psyjai</label>
+            <Divider style={{margin: '25px'}}  />
+            <label  style={{fontSize: '18px'}}>กรุณาเข้าสู่ระบบ</label>
+            <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()}/>
+            </Card>
+     
         </div>
       );
     }  
